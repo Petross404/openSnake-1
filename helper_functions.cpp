@@ -1,7 +1,9 @@
 #include <iostream>
 #include "openSnakeConfig.h"
 #include "defines.h"
+#include "helper_functions.h"
 #include <limits>
+#include <GL/glut.h>
 
 using namespace std;
 
@@ -17,7 +19,7 @@ void print_usage()
     cout << " -g, --grid-size N \t Size for grid\n";
     cout << " -h, --help \t\t Print this message and exit\n";
     cout << " -n, --number-snakes N\t How many snakes will be created\n";
-    cout << " -v, --verbose \t\t Print version and exit\n";
+    cout << " -v, --version \t\t Print version and exit\n";
     cout << " -s, --snake-size N \t Size of the snake(s)";
     cout << endl;
 }
@@ -26,7 +28,8 @@ void print_version()
 {
     cout << "You are running " << PROJECT_NAME << " v"
          << openSnake_VERSION_MAJOR << "."
-         << openSnake_VERSION_MINOR << endl;
+         << openSnake_VERSION_MINOR << "."
+         << openSnake_VERSION_PATCH << endl;
 }
 
 void check_cin()
@@ -38,21 +41,19 @@ void check_cin()
 
 // TODO Not the most elegant solution to warn if an option
 // is missing. Must rethink this check.
-void proccess_flags_status(bool gflag,
-                           bool nflags,
-                           bool sflags)
+void proccess_flags_status(bool gflag, bool nflag, bool sflag)
 {
     if (!gflag)
     {
         cerr << "-g is needed!\n";
     }
 
-    if (!nflags)
+    if (!nflag)
     {
         cerr << "-n is needed!\n";
     }
 
-    if (!sflags)
+    if (!sflag)
     {
         cerr << "-s is needed!\n";
     }
@@ -70,4 +71,28 @@ void print_man(){
     char msg_usage[] = "manual..\n";
     cout << msg_usage;
 }
+
+void menu (int num){
+    if (!num){
+        glutDestroyWindow(window);
+        exit(EXIT_SUCCESS);
+    }else {
+        value = num;
+    }
+    glutPostRedisplay();
+}
+
+void createMenu(void){
+    submenu_id = glutCreateMenu(menu);
+    menu_id = glutCreateMenu(menu);
+
+    glutAddMenuEntry("Quit " PROJECT_NAME, 0);
+    glutAttachMenu(GLUT_RIGHT_BUTTON);
+}
+
+
+
+
+
+
 

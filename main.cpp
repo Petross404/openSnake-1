@@ -10,6 +10,7 @@
 #include <GL/glut.h>
 
 #include "defines.h"
+#include "helper_functions.h"
 #include "openSnakeConfig.h"
 
 int grid_size{-1};
@@ -38,7 +39,7 @@ int main(int argc, char** argv)
         // Use abs() just in case a negative num is given. I chose not to
         // use unsigned for initialization purposes.
 
-        // Flags for mandatory options
+        // Flags for mandatory options, grid_size, snake_num, snake_size
         bool gflag{false}, nflag{false}, sflag{false};
 
         // TODO Decide whether c.l. arguments will be mandatory or optional
@@ -48,7 +49,7 @@ int main(int argc, char** argv)
             {"grid-size", required_argument, NULL, 'g'},
             {"number-snake", required_argument, NULL, 'n'},
             {"snake-size", required_argument, NULL, 's'},
-            {"verbose", no_argument, NULL, 'v'},
+            {"version", no_argument, NULL, 'v'},
             {"help", no_argument, NULL, 'h'},
             {0, 0, 0, 0}
         };
@@ -85,12 +86,13 @@ int main(int argc, char** argv)
                      case 'h' :
                      case '?' :
                          print_usage();
-                         exit(EXIT_SUCCESS);
+                         if (option == 'h') exit(EXIT_SUCCESS);
+                         else exit(EXIT_FAILURE);
                          break;
 
                      case ':' :
                          cerr << PROJECT_NAME << ": option"
-                               << (char)optopt << " requires an argumen\n";
+                               << (char)optopt << " requires an argument\n";
 
                      case 'v' :
                          print_version();
@@ -102,12 +104,10 @@ int main(int argc, char** argv)
                 }
         }
 
-        proccess_flags_status(gflag,
-                              nflag,
-                              sflag);
+        proccess_flags_status(gflag, nflag, sflag);
 
         // Either the user didn't provide a valid number or
-        // the user provided stupid numbers
+        // the user provided 0
         if (grid_size <= 0 || snake_num <= 0 || snakeSize <= 0)
         {
             print_usage();
@@ -115,7 +115,7 @@ int main(int argc, char** argv)
             exit(EXIT_FAILURE);
         }
 
-# elif __WIN32
+# elif __WIN32                                              // TODO Must check Win build too...
 
         while((cout << "Grid size: ") &&
                !(cin >> grid_size))
@@ -169,13 +169,11 @@ int main(int argc, char** argv)
 
 	}
 
-        int temp{0};
 	for(int i = 0; i < snake_num; i++)
 	{
 		coordinates = new coord [2 * snake_array[i].size - 1];
-		temp = i + 1;
 		if ((x < 0) || (y < 0) || (z < 0)){
-                      while ((cout << "Position for snake #" << temp << "(x,y,z): ") &&
+                while ((cout << "Position for snake #" << i + 1 << "(x,y,z): ") &&
                       !(cin >> x >> y >> z))
                       {
                           check_cin();
@@ -187,8 +185,9 @@ int main(int argc, char** argv)
     	glutInit(&argc, argv);
     	glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     	glutInitWindowSize (WIN_X_SIZE, WIN_Y_SIZE);
-    	glutCreateWindow("Open Snake");
-    	//glutCreateWindow(PROJECT_NAME);
+    	window = glutCreateWindow("Open Snake");
+        //glutCreateWindow(PROJECT_NAME);                    // Use this to automatically set the title
+    	createMenu();
 
     	init ();
 

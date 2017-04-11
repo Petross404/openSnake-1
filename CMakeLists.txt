@@ -3,6 +3,7 @@ project(openSnake)
 
 set (openSnake_VERSION_MAJOR 0)
 set (openSnake_VERSION_MINOR 1)
+set (openSnake_VERSION_PATCH 0)
 
 # configure a header file to pass some of the CMake settings
 # to the source code
@@ -39,4 +40,5 @@ target_link_libraries(
     ${PROJECT_NAME}
     ${OPENGL_LIBRARY}
     ${GLUT_LIBRARIES}
+    ${GLEW_LIBRARIES}
     )
